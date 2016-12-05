@@ -1,0 +1,15 @@
+{
+  "name": "framer",
+  "version": "1.0.0",
+  "description": "Easily apply a frame overlay to an avatar photo.",
+  "main": "index.js",
+  "devDependencies": {
+    "http-server-spa": "^1.2.0"
+  },
+  "scripts": {
+    "serve": "http-server-spa ."
+  },
+  "keywords": ["avatar", "frame", "canvas"],
+  "author": "Luke Jacskon <lukejacksonn@gmail.com>",
+  "license": "MIT"
+}

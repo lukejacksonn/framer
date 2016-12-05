@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Framer</title>
+    <style media="screen">
+      body {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      canvas  {
+        display: block;
+        width:62vmin;
+        height:62vmin;
+        margin: auto;
+        border: 1rem solid white;
+        box-shadow: 0 0 1rem 0 rgba(0,0,0,0.1);
+      }
+      overlay- {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        margin-left: calc(50% - 31vmin);
+        pointer-events: none;
+      }
+      overlay- img {
+        display: block;
+        width:62vmin;
+        height:62vmin;
+        pointer-events: none;
+        background: #f2f2f2;
+        flex: none;
+      }
+      overlay- img.active {
+        background: transparent;
+      }
+      overlay- img:not(.active) {
+        transform: scale(.618);
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <overlay- data-index='0'>
+      <img class='active' src="/frames/harvard-fair.png" alt="">
+      <img src="/frames/yale-fair.png" alt="">
+      <img src="/frames/cs50-hackathon.png" alt="">
+      <img src="/frames/cs50-coding-contest.png" alt="">
+    </overlay->
+    <script>
+
+      // Declare component elements
+      const $canvas = document.querySelector('canvas');
+      const $avatar = document.createElement('img');
+
+      // Initialize panning options
+      let dragStart = { x:0, y:0 };
+      let imgPos = { x:0, y:0 };
+
+      // Helper function for when downloading
+      const cloneCanvas = (oldCanvas) => {
+        const newCanvas = document.createElement('canvas');
+        const context = newCanvas.getContext('2d');
+        newCanvas.width = oldCanvas.width;
+        newCanvas.height = oldCanvas.height;
+        context.drawImage(oldCanvas, 0, 0);
+        return newCanvas;
+      };
+
+      // Apply a filter to a canvas
+      const applyFilter = (canvas) => (url) =>
+      new Promise((resolve, reject) => {
+        const image = document.createElement('img');
+        image.src = url;
+        image.onload = () => {
+          canvas.getContext('2d')
+          .drawImage(image, 0, 0, canvas.width, canvas.height);
+          resolve(canvas);
+        }
+      });
+
+      // Draw an avatar to a canvas
+      const drawAvatar = (url) => {
+        imgPos = { x:0, y:0 };
+        $avatar.src = url;
+        $avatar.onload = () => {
+          // Set the $canvas size to the $avatars shortest side
+          $canvas.width = Math.min($avatar.width, $avatar.height);
+          $canvas.height = Math.min($avatar.width, $avatar.height);
+          // Draw the avatar $avatar to $canvas
+          $canvas.getContext('2d')
+          .drawImage($avatar, 0, 0, $avatar.width, $avatar.height);
+        }
+      };
+
+      // Create file blob from dataUrl and initiate a download
+      const download = (dataUrl) => {
+        var data = atob(dataUrl.substring("data:image/png;base64,".length));
+        var asArray = new Uint8Array(data.length);
+        for (var i = 0, len = data.length; i < len; ++i) asArray[i] = data.charCodeAt(i);
+        var f = new Blob([asArray.buffer], {type:'application/octet-stream'});
+        var a = document.createElement('a');
+        window.URL = window.URL || window.webkitURL;
+        a.href = window.URL.createObjectURL(f);
+        a.download = 'filter.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(document.body.lastElementChild);
+      };
+
+      // Move $avatar around canvas according to drag event
+      const track = (e) => {
+        const x = Math.max(Math.min(imgPos.x+(e.pageX-dragStart.x), 0), ($canvas.width - $avatar.width));
+        const y = Math.max(Math.min(imgPos.y+(e.pageY-dragStart.y), 0), ($canvas.height - $avatar.height));
+        // Draw the avatar on the $canvas
+        $canvas.getContext('2d')
+          .drawImage($avatar, x, y, $avatar.width, $avatar.height);
+      };
+
+      // Setup at the start of a drag event
+      const start = (e) => {
+        dragStart = { x: e.pageX, y: e.pageY };
+        document.body.addEventListener('mousemove', track);
+      };
+
+      // Teardown ar the end of a drag event
+      const stop = (e) => {
+        document.body.removeEventListener('mousemove', track);
+        imgPos = {
+          x: Math.max(Math.min(imgPos.x+(e.pageX-dragStart.x), 0), ($canvas.width - $avatar.width)),
+          y: Math.max(Math.min(imgPos.y+(e.pageY-dragStart.y), 0), ($canvas.height - $avatar.height)),
+        };
+      };
+
+      // Extract image dataUrl from drop event
+      const processInput = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        // Setup file reader
+        const reader = new FileReader();
+        const file =  e.dataTransfer.files[0];
+        const acceptedFiles = ['png', 'bmp', 'jpg', 'jpeg', 'gif'];
+        // Ensure that the file type
+        if (!acceptedFiles.includes(file.type.replace('image/', ''))) {
+          alert('Incompatible file type!');
+          return;
+        }
+        // Initiate reading of file
+        reader.onload = file => drawAvatar(file.srcElement.result);
+        reader.readAsDataURL(file);
+      };
+
+      // Apply default avatar
+      drawAvatar('/avatar.jpg');
+
+      // Create a drag-and-drop interface for images on entire body
+      document.body.addEventListener('dragover', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+      });
+
+      // When the user drops or inputs an image process the image
+      document.body.addEventListener('drop', processInput);
+
+      // Pan image on drag from $canvas
+      $canvas.addEventListener('mousedown', start);
+
+      // Stop any tracking at end of drag
+      document.body.addEventListener('mouseup', stop);
+      document.body.addEventListener('mouseleave', stop);
+
+      // When the user uses the arrow keys to change filter
+      document.body.addEventListener('keyup', (e) => {
+        const overlay = document.querySelector('overlay-');
+        let index = parseInt(overlay.dataset.index, 10);
+        // Right arrow for next filter
+        if(e.keyCode === 39 && index < overlay.children.length-1) {
+          overlay.dataset.index = ++index;
+          overlay.style.transform = `translateX(-${(index * 62)}vmin)`;
+        }
+        // Left arrow for previous filter
+        if(e.keyCode === 37 && index > 0) {
+          overlay.dataset.index = --index;
+          overlay.style.transform = `translateX(-${(index * 62)}vmin)`;
+        }
+        // Spacebar from download
+        if(e.keyCode === 32) {
+          const c = cloneCanvas($canvas);
+          const f = document.querySelector('.active').src;
+          applyFilter(c)(f).then(res => {
+            download(res.toDataURL('image/png'));
+          });
+        }
+        // Add active class to focus filter
+        [...overlay.children].forEach(x => x.classList.remove('active'));
+        overlay.children[index].classList.add('active');
+      });
+
+    </script>
+  </body>
+</html>
