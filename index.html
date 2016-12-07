@@ -110,7 +110,7 @@
         var a = document.createElement('a');
         window.URL = window.URL || window.webkitURL;
         a.href = window.URL.createObjectURL(f);
-        a.download = 'filter.png';
+        a.download = 'filter.jpg';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(document.body.lastElementChild);
@@ -197,7 +197,7 @@
           const c = cloneCanvas($canvas);
           const f = document.querySelector('.active').src;
           applyFilter(c)(f).then(res => {
-            download(res.toDataURL('image/png'));
+            download(res.toDataURL('image/jpg'));
           });
         }
         // Add active class to focus filter
