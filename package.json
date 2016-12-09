@@ -4,13 +4,14 @@
   "description": "Easily apply a frame overlay to an avatar photo.",
   "main": "index.js",
   "devDependencies": {
-    "babel-cli": "^6.18.0",
     "babel-preset-latest": "^6.16.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.1",
     "http-server-spa": "^1.2.0"
   },
   "scripts": {
     "serve": "http-server-spa .",
-    "compile": "babel index.js --out-file compiled.js"
+    "compile": "browserify index.js -t babelify --outfile compiled.js"
   },
   "keywords": [
     "avatar",
@@ -18,5 +19,8 @@
     "canvas"
   ],
   "author": "Luke Jacskon <lukejacksonn@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "file-saver": "^1.3.3"
+  }
 }

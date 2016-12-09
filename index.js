@@ -1,3 +1,4 @@
+import FileSaver from 'file-saver';
 // Declare component elements
 const $body = document.body;
 const $canvas = document.querySelector('canvas');
@@ -56,13 +57,7 @@ const download = (dataUrl) => {
     const asArray = new Uint8Array(data.length);
     for (let i = 0, len = data.length; i < len; ++i) asArray[i] = data.charCodeAt(i);
     const f = new Blob([asArray.buffer], {type:'application/octet-stream'});
-    const a = document.createElement('a');
-    window.URL = window.URL || window.webkitURL;
-    a.href = window.URL.createObjectURL(f);
-    a.download = 'filter.jpg';
-    $body.appendChild(a);
-    a.click();
-    $body.removeChild($body.lastElementChild);
+    FileSaver.saveAs(f, "filter.jpg");
   });
 };
 
