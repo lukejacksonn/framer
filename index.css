@@ -1,0 +1,78 @@
+body {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: sans-serif;
+}
+canvas  {
+  display: block;
+  width:62vmin;
+  height:62vmin;
+  margin: auto;
+  border: 1rem solid white;
+  box-shadow: 0 0 1rem 0 rgba(0,0,0,0.1);
+}
+overlay- {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  margin-left: calc(50% - 31vmin);
+  pointer-events: none;
+}
+overlay- img {
+  display: block;
+  width:62vmin;
+  height:62vmin;
+  pointer-events: none;
+  background: #f2f2f2;
+  flex: none;
+}
+overlay- img.active {
+  background: transparent;
+}
+overlay- img:not(.active) {
+  transform: scale(.618);
+}
+instructions- {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(255,255,255,.8);
+}
+
+instructions- div {
+  margin: auto;
+  text-align: center;
+  font-size: 2rem;
+}
+
+button {
+  border: 0;
+  padding: 1rem;
+  background: #eee;
+  font-size: 1rem;
+  font-weight: bold;
+  outline: none;
+  color: #999;
+}
+
+button:hover {
+  color: #666;
+}
+
+controls- {
+  position: fixed;
+  text-align: center;
+  bottom: 0;
+  width: 100%;
+}
