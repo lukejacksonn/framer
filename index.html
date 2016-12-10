@@ -6,20 +6,26 @@
     <link rel="stylesheet" href="index.css">
   </head>
   <body>
-    <canvas></canvas>
-    <overlay- data-index='0'>
-      <img class='active' src="frames/harvard-fair.png" alt="">
-      <img src="frames/harvard-tee.png" alt="">
-      <img src="frames/yale-fair.png" alt="">
-      <img src="frames/yale-tee.png" alt="">
-      <img src="frames/cs50-hackathon.png" alt="">
-      <img src="frames/cs50-coding-contest.png" alt="">
-    </overlay->
-    <controls->
-      <button class="prev">&lt;</button>
-      <button class="download">DOWNLOAD</button>
-      <button class="next">&gt;</button>
-    </controls->
+    <header>
+      <h1>framer</h1>
+      <p>Drag your profile picture onto the page and select a frame from the list below</p>
+    </header>
+    <main>
+      <canvas></canvas>
+      <overlay- data-index='0'>
+        <img class='active' src="frames/harvard-fair.png" alt="">
+        <img src="frames/harvard-tee.png" alt="">
+        <img src="frames/yale-fair.png" alt="">
+        <img src="frames/yale-tee.png" alt="">
+        <img src="frames/cs50-hackathon.png" alt="">
+        <img src="frames/cs50-coding-contest.png" alt="">
+      </overlay->
+      <controls->
+        <button class="prev">&lt;</button>
+        <button class="download">DOWNLOAD</button>
+        <button class="next">&gt;</button>
+      </controls->
+    </main>
     <!-- <instructions->
       <div>
         <p>Drag a photo into the frame</p>
